@@ -7,7 +7,7 @@ import pandas as pd
 st.markdown("""
 <style>
 input[type=number] {
-    font-size: 26px !important;
+    font-size: 24px !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -85,6 +85,7 @@ html_table = html_table.replace('<th>', '<th style="font-size:16px; background-c
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
