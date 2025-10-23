@@ -48,7 +48,7 @@ for p in players:
 # -------------------------
 # ベスト・ドラニヤ・バーディ
 # -------------------------
-awards = [("ベスト", 200), ("🏌️‍♂️ドラニヤ", 300), ("🐦バーディ", 500)]
+awards = [("ベスト", 200), ("ドラニヤ", 300), ("バーディ", 500)]
 for cat, value in awards:
     st.subheader(f"{cat}（単価 {value}）")
     inputs = [st.number_input(f"{p} の {cat} 数", min_value=0, value=0) for p in players]
@@ -85,6 +85,7 @@ html_table = html_table.replace('<th>', '<th style="font-size:16px; background-c
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
