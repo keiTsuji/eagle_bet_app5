@@ -17,17 +17,16 @@ input[type=number] {
 # -------------------------
 st.markdown("""
 <div style='
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
+    text-align:center;
     height:120px;
     background-color:#e0f7fa;
     border-radius:15px;
+    line-height:120px;  /* 高さと同じにして縦中央に */
 '>
     <h1 style='font-size:28px; color:#00796b; margin:0;'>🏌️‍♂️ イーグル会ベット計算機 🏌️‍♀️</h1>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 # -------------------------
@@ -85,6 +84,7 @@ html_table = html_table.replace('<th>', '<th style="font-size:16px; background-c
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
