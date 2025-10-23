@@ -33,7 +33,7 @@ st.markdown("""
 # -------------------------
 # プレイヤー名と結果用データフレーム
 # -------------------------
-players = ["辻", "菅井", "木村", "霜田"]
+players = ["菅井", "辻", "木村", "霜田"]
 categories = ["優勝", "ベスト", "ドラニヤ", "バーディ", "ストローク"]
 results = pd.DataFrame(0, index=categories, columns=players)
 
@@ -85,6 +85,7 @@ html_table = html_table.replace('<th>', '<th style="font-size:16px; background-c
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
