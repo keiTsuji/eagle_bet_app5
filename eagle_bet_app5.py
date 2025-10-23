@@ -1,0 +1,79 @@
+import streamlit as st
+import pandas as pd
+
+# -------------------------
+# CSSで number_input の数字を大きく
+# -------------------------
+st.markdown("""
+<style>
+input[type=number] {
+    font-size: 24px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# -------------------------
+# タイトル表示（装飾あり）
+# -------------------------
+st.markdown("""
+<div style='text-align:center; background-color:#e0f7fa; padding:20px; border-radius:15px;'>
+    <h1 style='font-size:36px; color:#00796b;'>🏌️‍♂️ イーグル会ベット計算機 🏌️‍♀️</h1>
+    <p style='font-size:18px; color:#004d40;'>ローカルPythonで動作確認用テスト画面</p>
+</div>
+""", unsafe_allow_html=True)
+
+# -------------------------
+# プレイヤー名と結果用データフレーム
+# -------------------------
+players = ["辻", "菅井", "木村", "霜田"]
+categories = ["優勝", "ベスト", "ドラニヤ", "バーディ", "ストローク"]
+results = pd.DataFrame(0, index=categories, columns=players)
+
+# -------------------------
+# 優勝
+# -------------------------
+st.subheader("🏆 優勝（1000）")
+winner_victory = st.radio("優者を選択", players)
+for p in players:
+    results.loc["優勝", p] = 1000*3 if p == winner_victory else -1000
+
+# -------------------------
+# ベスト・ドラニヤ・バーディ
+# -------------------------
+awards = [("ベスト", 200), ("ドラニヤ", 300), ("バーディ", 500)]
+for cat, value in awards:
+    st.subheader(f"{cat}（単価 {value}）")
+    inputs = [st.number_input(f"{p} の {cat} 数", min_value=0, value=0) for p in players]
+    for i, p in enumerate(players):
+        others_sum = sum(inputs) - inputs[i]
+        results.loc[cat, p] = (inputs[i]*3 - others_sum) * value
+
+# -------------------------
+# ストローク
+# -------------------------
+st.subheader("⛳ ストローク（単価100）")
+scores = [st.number_input(f"{p} のスコア", min_value=0, value=72) for p in players]
+for i, p in enumerate(players):
+    diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) if j != i)
+    results.loc["ストローク", p] = -diff_sum * 100
+
+# -------------------------
+# 合計
+# -------------------------
+results.loc["合計"] = results.sum()
+
+st.divider()
+st.subheader("💰 計算結果")
+
+# -------------------------
+# HTMLで表を装飾
+# -------------------------
+html_table = results.to_html(classes='table', border=1, justify='center')
+html_table = html_table.replace(
+    '<table border="1" class="dataframe table">',
+    '<table border="1" class="dataframe table" style="text-align:center; background-color:#fff8dc; border-radius:10px;">'
+)
+html_table = html_table.replace('<th>', '<th style="font-size:16px; background-color:#f5deb3;">')
+html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
+
+st.markdown(html_table, unsafe_allow_html=True)
