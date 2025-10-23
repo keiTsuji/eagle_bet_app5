@@ -17,7 +17,7 @@ input[type=number] {
 # -------------------------
 st.markdown("""
 <div style='text-align:center; background-color:#e0f7fa; padding:16px; border-radius:15px;'>
-    <h3 style='font-size:28px; color:#00796b;'>🏌️‍♂️ イーグル会ベット計算機 🏌️‍♀️</h3>
+    <h1 style='font-size:28px; color:#00796b;'>🏌️‍♂️ イーグル会ベット計算機 </h1>
 </div>
 """, unsafe_allow_html=True)
 
@@ -76,6 +76,7 @@ html_table = html_table.replace('<th>', '<th style="font-size:16px; background-c
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
