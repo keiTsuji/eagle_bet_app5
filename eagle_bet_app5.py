@@ -2,17 +2,6 @@ import streamlit as st
 import pandas as pd
 
 # -------------------------------------------
-# CSS設定
-# -------------------------------------------
-st.markdown("""
-<style>
-input[type=number] {
-    font-size: 24px !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# -------------------------------------------
 # タイトル
 # -------------------------------------------
 st.markdown("""
@@ -54,7 +43,31 @@ for cat, value in awards:
 st.subheader("⛳ ストローク（単価100）")
 scores = [int(st.number_input(f"{p} のスコア", min_value=0, value=75)) for p in players]
 for i, p in enumerate(players):
-    diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) i_
+    diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) if j != i)
+    results.loc["ストローク", p] = -diff_sum * 100
+
+# 合計
+results.loc["合計"] = results.sum()
+
+st.markdown("---")
+st.subheader("💰 計算結果")
+
+# -------------------------------------------
+# 安全にHTMLテーブル作成
+# -------------------------------------------
+html_table = "<table style='width:100%; border-collapse:collapse; text-align:center;'>"
+
+# ヘッダー
+html_table += "<thead><tr><th style='background-color:#f5deb3; padding:6px 8px'></th>"
+for p in players:
+    html_table += f"<th style='background-color:#f5deb3; padding:6px 8px'>{p}</th>"
+html_table += "</tr></thead>"
+
+# ボディ
+html_table += "<tbody>"
+for idx in results.index:
+    # 太線を入れるか判定
+
 
 
 
