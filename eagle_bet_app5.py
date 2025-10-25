@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # -------------------------------------------
-# 2025.10.25 最新版（セル色付き）
+# 2025.10.25 数値セルの枠線カラー付き
 # -------------------------------------------
 
 # -------------------------
@@ -13,13 +13,23 @@ st.markdown("""
 input[type=number] {
     font-size: 24px !important;
 }
+table.dataframe {
+    border-collapse: collapse;
+    width: 100%;
+}
 table.dataframe td {
     font-size: 20px;
     text-align: center;
+    border: 2px solid #90caf9;  /* 数値セルの枠線を青系 */
+    border-radius: 6px;
+}
+table.dataframe tr:last-child td {
+    border: 2px solid #42a5f5;  /* 合計行は濃いめの青 */
 }
 table.dataframe th {
     font-size: 16px;
     background-color:#f5deb3;
+    border: 2px solid #ddd;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -51,7 +61,7 @@ results = pd.DataFrame(0, index=categories, columns=players)
 # 優勝
 # -------------------------
 st.subheader("🏆 優勝（1000）")
-winner_victory = st.radio("優勝者を選択", players)
+winner_victory = st.radio("優者を選択", players)
 for p in players:
     results.loc["優勝", p] = 1000*3 if p == winner_victory else -1000
 
@@ -84,35 +94,15 @@ st.divider()
 st.subheader("💰 計算結果")
 
 # -------------------------
-# セルの色付け関数
+# HTMLで表を装飾
 # -------------------------
-def color_cells(val):
-    color = ""
-    if val > 0:
-        color = "#d4edda"   # 緑（プラス）
-    elif val < 0:
-        color = "#f8d7da"   # 赤（マイナス）
-    else:
-        color = "#f2f2f2"   # グレー（ゼロ）
-    return f"background-color: {color}; color: black; font-weight: bold;"
-
-# -------------------------
-# 結果表示（色付き）
-# -------------------------
-styled_results = results.style.format("{:+,}").applymap(color_cells)
-st.dataframe(styled_results, use_container_width=True)
-
-# -------------------------
-# CSVダウンロード
-# -------------------------
-csv = results.to_csv(index=True).encode("utf-8-sig")
-st.download_button(
-    label="📥 結果をCSVでダウンロード",
-    data=csv,
-    file_name="eagle_bet_result.csv",
-    mime="text/csv"
+html_table = results.to_html(classes='dataframe table', border=1, justify='center')
+html_table = html_table.replace(
+    '<table border="1" class="dataframe table">',
+    '<table border="1" class="dataframe table" style="text-align:center; background-color:#fff8dc; border-radius:10px;">'
 )
 
+st.markdown(html_table, unsafe_allow_html=True)
 
 
 
