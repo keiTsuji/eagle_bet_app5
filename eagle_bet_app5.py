@@ -13,7 +13,7 @@ input[type=number] {
 """, unsafe_allow_html=True)
 
 # -------------------------------------------
-# タイトル表示
+# タイトル
 # -------------------------------------------
 st.markdown("""
 <div style='
@@ -60,37 +60,13 @@ for i, p in enumerate(players):
 # 合計
 results.loc["合計"] = results.sum()
 
-# 区切り
 st.markdown("---")
 st.subheader("💰 計算結果")
 
 # -------------------------------------------
-# HTMLテーブルを直接作成（置換なしで安全）
+# 安全にHTMLテーブル作成
 # -------------------------------------------
-html_table = "<table style='width:100%; border-collapse:collapse; text-align:center; background-color:#fff8dc; border-radius:10px;'>"
-# ヘッダー
-html_table += "<thead><tr><th style='font-size:16px; background-color:#f5deb3; padding:6px 8px'></th>"
-for p in players:
-    html_table += f"<th style='font-size:16px; background-color:#f5deb3; padding:6px 8px'>{p}</th>"
-html_table += "</tr></thead>"
-
-# ボディ
-html_table += "<tbody>"
-for idx in results.index:
-    html_table += "<tr>"
-    # 行ヘッダー
-    border = "3px solid black" if idx in ["ストローク", "合計"] else "1px solid black"
-    html_table += f"<th style='font-size:16px; background-color:#f5deb3; padding:6px 8px; border-bottom:{border}'>{idx}</th>"
-    for p in players:
-        val = results.loc[idx, p]
-        color = "red" if val < 0 else "black"
-        html_table += f"<td style='font-size:20px; padding:6px 8px; background-color:#faebd7; color:{color}; border-bottom:{border}'>{val}</td>"
-    html_table += "</tr>"
-html_table += "</tbody></table>"
-
-st.markdown(html_table, unsafe_allow_html=True)
-
-
+html_table = "<table style='width:100%; border-collapse:collapse; text-align:center; backgro_
 
 
 
