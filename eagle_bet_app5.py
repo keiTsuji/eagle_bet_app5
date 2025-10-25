@@ -93,20 +93,16 @@ results.loc["合計"] = results.sum()
 st.divider()
 st.subheader("💰 計算結果")
 
-# -------------------------
-# HTMLで表を装飾（文字色はテーマに任せる）
-# -------------------------
-html_table = results.to_html(classes='dataframe table', border=1, justify='center')
+# HTMLで表を作成・装飾
+html_table = results.to_html(classes='table', border=1, justify='center')
 html_table = html_table.replace(
     '<table border="1" class="dataframe table">',
     '<table border="1" class="dataframe table" style="text-align:center; background-color:#fff8dc; border-radius:10px;">'
 )
+html_table = html_table.replace('<th>', '<th style="font-size:16px; background-color:#f5deb3;">')
+html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
-
-
-
-
 
 
 
