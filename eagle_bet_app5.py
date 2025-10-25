@@ -99,7 +99,7 @@ html_table = html_table.replace(
     '<table border="1" class="dataframe table">',
     '<table border="1" class="dataframe table" style="text-align:center; background-color:#fff8dc; border-radius:10px;">'
 )
-html_table = html_table.replace('<th>', '<th style="font-size:16px; background-color:#fff8dc;">')
+html_table = html_table.replace('<th>', '<th style="font-size:16px; background-color:#f5deb3;">')
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
