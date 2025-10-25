@@ -25,14 +25,13 @@ table.dataframe td {
 
 
 /* ヘッダーの見た目はそのまま */
-table.dataframe th {
-    font-size: 16px;       /* ヘッダーサイズ */
-    background-color:#f5deb3;
+table.dataframe td {
+    font-size: 20px;
     text-align: center;
+    background-color: #faebd7;  /* ★ パステルベージュ（AntiqueWhite） */
+    color: black;
     padding: 6px 8px;
 }
-</style>
-""", unsafe_allow_html=True)
 
 # -------------------------
 # タイトル表示（装飾あり）
@@ -103,6 +102,7 @@ html_table = html_table.replace('<th>', '<th style="font-size:16px; background-c
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
