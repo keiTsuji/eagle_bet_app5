@@ -13,14 +13,8 @@ table.dataframe {
     border-collapse: collapse;
     width: 100%;
 }
-/* 数字セルの背景色（淡いミント） — 文字サイズはそのまま */
-table.dataframe td {
-    font-size: 20px;       /* 数字サイズ */
-    text-align: center;
-    background-color: #f0fff4;  /* ← 数字セルのバックカラー（おまかせ色） */
-    color: black;               /* 文字は黒で見やすく */
-    padding: 6px 8px;
-}
+
+
 
 
 
@@ -102,6 +96,7 @@ html_table = html_table.replace('<th>', '<th style="font-size:16px; background-c
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
