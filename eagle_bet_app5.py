@@ -38,7 +38,7 @@ for p in players:
 awards = [("ベスト", 200), ("ドラニヤ", 300), ("バーディ", 500)]
 for cat, value in awards:
     st.subheader(f"{cat}（単価 {value}）")
-    inputs = [st.number_input(f"{p} の {cat} 数", min_value=0, value=0) for p in players]
+    inputs = [int(st.number_input(f"{p} の {cat} 数", min_value=0, value=0)) for p in players]
     for i, p in enumerate(players):
         others_sum = sum(inputs) - inputs[i]
         results.loc[cat, p] = (inputs[i]*3 - others_sum) * value
@@ -47,7 +47,7 @@ for cat, value in awards:
 # ストローク
 # -------------------------------------------
 st.subheader("⛳ ストローク（単価100）")
-scores = [st.number_input(f"{p} のスコア", min_value=0, value=75) for p in players]
+scores = [int(st.number_input(f"{p} のスコア", min_value=0, value=75)) for p in players]
 for i, p in enumerate(players):
     diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) if j != i)
     results.loc["ストローク", p] = -diff_sum * 100
@@ -57,7 +57,10 @@ for i, p in enumerate(players):
 # -------------------------------------------
 results.loc["合計"] = results.sum()
 
-st.divider()
+# -------------------------------------------
+# 区切り線（古いStreamlitでも安全）
+# -------------------------------------------
+st.markdown("---")
 st.subheader("💰 計算結果")
 
 # -------------------------------------------
@@ -73,7 +76,9 @@ for row_name in results.index:
     for p in players:
         val = results.loc[row_name, p]
         color = "red" if val < 0 else "black"
-        html_rows += f"<td style='color:{color}; background-color:#faebd7; border-bottom:{border};_
+        html_rows += f"<td style='color:{color}; background-color:#faebd7; border-bottom:{border}; text-align:center; font-size:20px; padding:6px 8px'>{val}</td>"
+    html_rows += "</_
+
 
 
 
