@@ -1,8 +1,12 @@
 import streamlit as st
 import pandas as pd
-# -------------------------------------------2025.10.25結果が消えるのを修正した
+
+# -------------------------------------------
+# 2025.10.25 結果が消えるのを修正した
+# -------------------------------------------
+
 # -------------------------
-# CSSで number_input の数字を大きく
+# CSSで number_input の数字を大きく + 表の色調整
 # -------------------------
 st.markdown("""
 <style>
@@ -14,11 +18,7 @@ table.dataframe {
     width: 100%;
 }
 
-
-
-
-
-/* ヘッダーの見た目はそのまま */
+/* セルの見た目 */
 table.dataframe td {
     font-size: 20px;
     text-align: center;
@@ -26,6 +26,16 @@ table.dataframe td {
     color: black;
     padding: 6px 8px;
 }
+
+/* ヘッダーの見た目 */
+table.dataframe th {
+    font-size: 16px;
+    background-color:#f5deb3;
+    text-align: center;
+    padding: 6px 8px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # -------------------------
 # タイトル表示（装飾あり）
@@ -54,9 +64,9 @@ results = pd.DataFrame(0, index=categories, columns=players)
 # 優勝
 # -------------------------
 st.subheader("🏆 優勝（1000）")
-winner_victory = st.radio("優者を選択", players)
+winner_victory = st.radio("優勝者を選択", players)
 for p in players:
-    results.loc["優勝", p] = 1000*3 if p == winner_victory else -1000
+    results.loc["優勝", p] = 1000 * 3 if p == winner_victory else -1000
 
 # -------------------------
 # ベスト・ドラニヤ・バーディ
@@ -67,7 +77,7 @@ for cat, value in awards:
     inputs = [st.number_input(f"{p} の {cat} 数", min_value=0, value=0) for p in players]
     for i, p in enumerate(players):
         others_sum = sum(inputs) - inputs[i]
-        results.loc[cat, p] = (inputs[i]*3 - others_sum) * value
+        results.loc[cat, p] = (inputs[i] * 3 - others_sum) * value
 
 # -------------------------
 # ストローク
@@ -86,7 +96,9 @@ results.loc["合計"] = results.sum()
 st.divider()
 st.subheader("💰 計算結果")
 
+# -------------------------
 # HTMLで表を作成・装飾
+# -------------------------
 html_table = results.to_html(classes='table', border=1, justify='center')
 html_table = html_table.replace(
     '<table border="1" class="dataframe table">',
@@ -96,7 +108,6 @@ html_table = html_table.replace('<th>', '<th style="font-size:16px; background-c
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
-
 
 
 
