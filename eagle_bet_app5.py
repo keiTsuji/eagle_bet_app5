@@ -2,12 +2,8 @@ import streamlit as st
 import pandas as pd
 
 # -------------------------------------------
-# 2025.10.25 結果が消えるのを修正した
+# CSS設定
 # -------------------------------------------
-
-# -------------------------
-# CSSで number_input の数字を大きく + 表の色調整
-# -------------------------
 st.markdown("""
 <style>
 input[type=number] {
@@ -18,16 +14,16 @@ table.dataframe {
     width: 100%;
 }
 
-/* セルの見た目 */
+/* 各セルのデフォルト */
 table.dataframe td {
     font-size: 20px;
     text-align: center;
-    background-color: #faebd7;  /* ★ パステルベージュ（AntiqueWhite） */
+    background-color: #faebd7;  /* パステルベージュ */
     color: black;
     padding: 6px 8px;
 }
 
-/* ヘッダーの見た目 */
+/* ヘッダー */
 table.dataframe th {
     font-size: 16px;
     background-color:#f5deb3;
@@ -37,9 +33,9 @@ table.dataframe th {
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------
-# タイトル表示（装飾あり）
-# -------------------------
+# -------------------------------------------
+# タイトル表示
+# -------------------------------------------
 st.markdown("""
 <div style='
     display:flex;
@@ -53,59 +49,62 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# -------------------------
-# プレイヤー名と結果用データフレーム
-# -------------------------
+# -------------------------------------------
+# データ準備
+# -------------------------------------------
 players = ["菅井", "辻", "木村", "霜田"]
 categories = ["優勝", "ベスト", "ドラニヤ", "バーディ", "ストローク"]
 results = pd.DataFrame(0, index=categories, columns=players)
 
-# -------------------------
 # 優勝
-# -------------------------
 st.subheader("🏆 優勝（1000）")
 winner_victory = st.radio("優勝者を選択", players)
 for p in players:
-    results.loc["優勝", p] = 1000 * 3 if p == winner_victory else -1000
+    results.loc["優勝", p] = 1000*3 if p == winner_victory else -1000
 
-# -------------------------
 # ベスト・ドラニヤ・バーディ
-# -------------------------
 awards = [("ベスト", 200), ("ドラニヤ", 300), ("バーディ", 500)]
 for cat, value in awards:
     st.subheader(f"{cat}（単価 {value}）")
     inputs = [st.number_input(f"{p} の {cat} 数", min_value=0, value=0) for p in players]
     for i, p in enumerate(players):
         others_sum = sum(inputs) - inputs[i]
-        results.loc[cat, p] = (inputs[i] * 3 - others_sum) * value
+        results.loc[cat, p] = (inputs[i]*3 - others_sum) * value
 
-# -------------------------
 # ストローク
-# -------------------------
 st.subheader("⛳ ストローク（単価100）")
 scores = [st.number_input(f"{p} のスコア", min_value=0, value=75) for p in players]
 for i, p in enumerate(players):
     diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) if j != i)
     results.loc["ストローク", p] = -diff_sum * 100
 
-# -------------------------
 # 合計
-# -------------------------
 results.loc["合計"] = results.sum()
 
 st.divider()
 st.subheader("💰 計算結果")
 
-# -------------------------
-# HTMLで表を作成・装飾
-# -------------------------
-html_table = results.to_html(classes='table', border=1, justify='center')
+# -------------------------------------------
+# HTML化 + マイナスは赤字に変換
+# -------------------------------------------
+html_table = results.to_html(classes='dataframe', border=1, justify='center')
+
+# 各セルをマイナスかどうかで装飾
+for p in players:
+    for c in results.index:
+        val = results.loc[c, p]
+        if val < 0:
+            # 負の値だけ赤字に変更
+            html_table = html_table.replace(
+                f">{val}<",
+                f"><span style='color:red;'>{val}</span><"
+            )
+
+# テーブル全体の装飾
 html_table = html_table.replace(
-    '<table border="1" class="dataframe table">',
-    '<table border="1" class="dataframe table" style="text-align:center; background-color:#fff8dc; border-radius:10px;">'
+    '<table border="1" class="dataframe">',
+    '<table border="1" class="dataframe" style="text-align:center; background-color:#fff8dc; border-radius:10px;">'
 )
-html_table = html_table.replace('<th>', '<th style="font-size:16px; background-color:#f5deb3;">')
-html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
 
