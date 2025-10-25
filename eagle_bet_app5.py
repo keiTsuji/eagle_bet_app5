@@ -1,10 +1,6 @@
 import streamlit as st
 import pandas as pd
-
-# -------------------------------------------
-# 2025.10.25 数値セルの枠線カラー付き
-# -------------------------------------------
-
+# -------------------------------------------2025.10.25結果が消えるのを修正した
 # -------------------------
 # CSSで number_input の数字を大きく
 # -------------------------
@@ -17,19 +13,26 @@ table.dataframe {
     border-collapse: collapse;
     width: 100%;
 }
+/* 数字セルの背景色（淡いミント） — 文字サイズはそのまま */
 table.dataframe td {
-    font-size: 20px;
+    font-size: 20px;       /* 数字サイズ */
     text-align: center;
-    border: 2px solid #90caf9;  /* 数値セルの枠線を青系 */
-    border-radius: 6px;
+    background-color: #f0fff4;  /* ← 数字セルのバックカラー（おまかせ色） */
+    color: black;               /* 文字は黒で見やすく */
+    padding: 6px 8px;
 }
+
+/* 合計行だけ別の背景色（淡いゴールド） */
 table.dataframe tr:last-child td {
-    border: 2px solid #42a5f5;  /* 合計行は濃いめの青 */
+    background-color: #fff3b0;  /* ← 合計行のバックカラー */
 }
+
+/* ヘッダーの見た目はそのまま */
 table.dataframe th {
-    font-size: 16px;
+    font-size: 16px;       /* ヘッダーサイズ */
     background-color:#f5deb3;
-    border: 2px solid #ddd;
+    text-align: center;
+    padding: 6px 8px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -94,7 +97,7 @@ st.divider()
 st.subheader("💰 計算結果")
 
 # -------------------------
-# HTMLで表を装飾
+# HTMLで表を装飾（文字色はテーマに任せる）
 # -------------------------
 html_table = results.to_html(classes='dataframe table', border=1, justify='center')
 html_table = html_table.replace(
@@ -103,9 +106,6 @@ html_table = html_table.replace(
 )
 
 st.markdown(html_table, unsafe_allow_html=True)
-
-
-
 
 
 
