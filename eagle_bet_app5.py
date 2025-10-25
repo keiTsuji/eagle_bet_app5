@@ -90,32 +90,28 @@ st.subheader("💰 計算結果")
 html_table = results.to_html(classes='dataframe', border=1, justify='center')
 
 # 各セルをマイナスかどうかで装飾
-for p in players:
-    for c in results.index:
-        val = results.loc[c, p]
-        if val < 0:
-            html_table = html_table.replace(
-                f">{val}<",
-                f"><span style='color:red;'>{val}</span><"
-            )
+for row in results.index:
+    for col in results.columns:
+        val = results.loc[row, col]
+        display_val = f"<span style='color:red;'>{val}</span>" if val < 0 else f"{val}"
+        # ストローク行と合計行は二重線
+        border_style = "border-bottom:3px double black;" if row in ["ストローク", "合計"] else ""
+        html_table = html_table.replace(
+            f">{val}<",
+            f" style='{border_style}'>{display_val}<"
+        )
+
+# ヘッダーはそのまま
+html_table = html_table.replace('<th>', '<th style="font-size:16px; background-color:#f5deb3;">')
 
 # テーブル全体の装飾
 html_table = html_table.replace(
     '<table border="1" class="dataframe">',
     '<table border="1" class="dataframe" style="text-align:center; background-color:#fff8dc; border-radius:10px;">'
 )
-html_table = html_table.replace('<th>', '<th style="font-size:16px; background-color:#f5deb3;">')
-
-# -------------------------------------------
-# ストローク行と合計行の下に二重線を追加
-# -------------------------------------------
-for row_name in ["ストローク", "合計"]:
-    html_table = html_table.replace(
-        f"<tr><th>{row_name}</th>",
-        f"<tr style='border-bottom: 3px double black;'><th>{row_name}</th>"
-    )
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
