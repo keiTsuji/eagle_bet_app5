@@ -9,27 +9,6 @@ st.markdown("""
 input[type=number] {
     font-size: 24px !important;
 }
-table.dataframe {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-/* 各セルのデフォルト */
-table.dataframe td {
-    font-size: 20px;
-    text-align: center;
-    background-color: #faebd7;  /* パステルベージュ */
-    color: black;
-    padding: 6px 8px;
-}
-
-/* ヘッダー */
-table.dataframe th {
-    font-size: 16px;
-    background-color:#f5deb3;
-    text-align: center;
-    padding: 6px 8px;
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -63,11 +42,53 @@ for p in players:
     results.loc["優勝", p] = 1000*3 if p == winner_victory else -1000
 
 # ベスト・ドラニヤ・バーディ
-awards = [("ベスト", 200]()
+awards = [("ベスト", 200), ("ドラニヤ", 300), ("バーディ", 500)]
+for cat, value in awards:
+    st.subheader(f"{cat}（単価 {value}）")
+    inputs = [int(st.number_input(f"{p} の {cat} 数", min_value=0, value=0)) for p in players]
+    for i, p in enumerate(players):
+        others_sum = sum(inputs) - inputs[i]
+        results.loc[cat, p] = (inputs[i]*3 - others_sum) * value
 
+# ストローク
+st.subheader("⛳ ストローク（単価100）")
+scores = [int(st.number_input(f"{p} のスコア", min_value=0, value=75)) for p in players]
+for i, p in enumerate(players):
+    diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) if j != i)
+    results.loc["ストローク", p] = -diff_sum * 100
 
+# 合計
+results.loc["合計"] = results.sum()
 
+# 区切り
+st.markdown("---")
+st.subheader("💰 計算結果")
 
+# -------------------------------------------
+# HTMLテーブルを直接作成（置換なしで安全）
+# -------------------------------------------
+html_table = "<table style='width:100%; border-collapse:collapse; text-align:center; background-color:#fff8dc; border-radius:10px;'>"
+# ヘッダー
+html_table += "<thead><tr><th style='font-size:16px; background-color:#f5deb3; padding:6px 8px'></th>"
+for p in players:
+    html_table += f"<th style='font-size:16px; background-color:#f5deb3; padding:6px 8px'>{p}</th>"
+html_table += "</tr></thead>"
+
+# ボディ
+html_table += "<tbody>"
+for idx in results.index:
+    html_table += "<tr>"
+    # 行ヘッダー
+    border = "3px solid black" if idx in ["ストローク", "合計"] else "1px solid black"
+    html_table += f"<th style='font-size:16px; background-color:#f5deb3; padding:6px 8px; border-bottom:{border}'>{idx}</th>"
+    for p in players:
+        val = results.loc[idx, p]
+        color = "red" if val < 0 else "black"
+        html_table += f"<td style='font-size:20px; padding:6px 8px; background-color:#faebd7; color:{color}; border-bottom:{border}'>{val}</td>"
+    html_table += "</tr>"
+html_table += "</tbody></table>"
+
+st.markdown(html_table, unsafe_allow_html=True)
 
 
 
