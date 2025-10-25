@@ -43,7 +43,7 @@ st.markdown("""
     justify-content:center;
     align-items:center;
     height:120px;
-    background-color:#f0f8ff；
+    background-color:#f0fff4;
     border-radius:15px;
 '>
     <h1 style='font-size:28px; color:#00796b; margin:0; line-height:1;'>🏌️‍♂️イーグル会ベット計算機🏌️‍♂️</h1>
@@ -103,6 +103,7 @@ html_table = html_table.replace('<th>', '<th style="font-size:16px; background-c
 html_table = html_table.replace('<td>', '<td style="font-size:20px;">')
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
