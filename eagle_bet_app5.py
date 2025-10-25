@@ -1,8 +1,40 @@
 import streamlit as st
 import pandas as pd
+# 最終形でマイナスの数字を赤くした
+# -------------------------------------------
+# CSS設定
+# -------------------------------------------
+st.markdown("""
+<style>
+input[type=number] {
+    font-size: 24px !important;
+}
+table.dataframe {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* 各セルのデフォルト */
+table.dataframe td {
+    font-size: 20px;
+    text-align: center;
+    background-color: #faebd7;  /* パステルベージュ */
+    color: black;
+    padding: 6px 8px;
+}
+
+/* ヘッダー */
+table.dataframe th {
+    font-size: 16px;
+    background-color:#f5deb3;
+    text-align: center;
+    padding: 6px 8px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # -------------------------------------------
-# タイトル
+# タイトル表示
 # -------------------------------------------
 st.markdown("""
 <div style='
@@ -34,14 +66,14 @@ for p in players:
 awards = [("ベスト", 200), ("ドラニヤ", 300), ("バーディ", 500)]
 for cat, value in awards:
     st.subheader(f"{cat}（単価 {value}）")
-    inputs = [int(st.number_input(f"{p} の {cat} 数", min_value=0, value=0)) for p in players]
+    inputs = [st.number_input(f"{p} の {cat} 数", min_value=0, value=0) for p in players]
     for i, p in enumerate(players):
         others_sum = sum(inputs) - inputs[i]
         results.loc[cat, p] = (inputs[i]*3 - others_sum) * value
 
 # ストローク
 st.subheader("⛳ ストローク（単価100）")
-scores = [int(st.number_input(f"{p} のスコア", min_value=0, value=75)) for p in players]
+scores = [st.number_input(f"{p} のスコア", min_value=0, value=75) for p in players]
 for i, p in enumerate(players):
     diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) if j != i)
     results.loc["ストローク", p] = -diff_sum * 100
@@ -49,25 +81,32 @@ for i, p in enumerate(players):
 # 合計
 results.loc["合計"] = results.sum()
 
-st.markdown("---")
+st.divider()
 st.subheader("💰 計算結果")
 
 # -------------------------------------------
-# 安全にHTMLテーブル作成
+# HTML化 + マイナスは赤字に変換
 # -------------------------------------------
-html_table = "<table style='width:100%; border-collapse:collapse; text-align:center;'>"
+html_table = results.to_html(classes='dataframe', border=1, justify='center')
 
-# ヘッダー
-html_table += "<thead><tr><th style='background-color:#f5deb3; padding:6px 8px'></th>"
+# 各セルをマイナスかどうかで装飾
 for p in players:
-    html_table += f"<th style='background-color:#f5deb3; padding:6px 8px'>{p}</th>"
-html_table += "</tr></thead>"
+    for c in results.index:
+        val = results.loc[c, p]
+        if val < 0:
+            # 負の値だけ赤字に変更
+            html_table = html_table.replace(
+                f">{val}<",
+                f"><span style='color:red;'>{val}</span><"
+            )
 
-# ボディ
-html_table += "<tbody>"
-for idx in results.index:
-    # 太線を入れるか判定
+# テーブル全体の装飾
+html_table = html_table.replace(
+    '<table border="1" class="dataframe">',
+    '<table border="1" class="dataframe" style="text-align:center; background-color:#fff8dc; border-radius:10px;">'
+)
 
+st.markdown(html_table, unsafe_allow_html=True)
 
 
 
