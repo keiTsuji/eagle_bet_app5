@@ -1,41 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# -------------------------------------------
-# CSS設定
-# -------------------------------------------
-st.markdown("""
-<style>
-input[type=number] {
-    font-size: 24px !important;
-}
-table.dataframe {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-/* 各セルのデフォルト */
-table.dataframe td {
-    font-size: 20px;
-    text-align: center;
-    background-color: #faebd7;  /* パステルベージュ */
-    color: black;
-    padding: 6px 8px;
-}
-
-/* ヘッダー */
-table.dataframe th {
-    font-size: 16px;
-    background-color:#f5deb3;
-    text-align: center;
-    padding: 6px 8px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# -------------------------------------------
-# タイトル表示
-# -------------------------------------------
+# タイトル
 st.markdown("""
 <div style='
     display:flex;
@@ -49,9 +15,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# -------------------------------------------
-# データ準備
-# -------------------------------------------
+# プレイヤー・カテゴリ
 players = ["菅井", "辻", "木村", "霜田"]
 categories = ["優勝", "ベスト", "ドラニヤ", "バーディ", "ストローク"]
 results = pd.DataFrame(0, index=categories, columns=players)
@@ -75,8 +39,36 @@ for cat, value in awards:
 st.subheader("⛳ ストローク（単価100）")
 scores = [st.number_input(f"{p} のスコア", min_value=0, value=75) for p in players]
 for i, p in enumerate(players):
-    diff_sum = sum(scores[i] - scores_
+    diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) if j != i)
+    results.loc["ストローク", p] = -diff_sum * 100
 
+# 合計
+results.loc["合計"] = results.sum()
+
+st.divider()
+st.subheader("💰 計算結果")
+
+# -----------------------------
+# pandas styleで装飾
+# -----------------------------
+def style_cell(val, row_name):
+    # マイナス赤文字
+    color = 'red' if val < 0 else 'black'
+    # 太線（ストローク・合計）
+    border = '3px solid black' if row_name in ['ストローク','合計'] else '1px solid black'
+    return f'color:{color}; background-color:#faebd7; border-bottom:{border}; text-align:center; font-size:20px; padding:6px 8px'
+
+styled = results.style.applymap(lambda v, row=results.index: '', subset=results.columns)  # placeholder
+# applymapだと行名情報がないので、ここでは簡単にHTMLで出力する
+# そこで行ごとにスタイル付け
+html_rows = ""
+for row_name in results.index:
+    html_rows += "<tr>"
+    html_rows += f"<th style='font-size:16px; background-color:#f5deb3; border-bottom:{'3px solid black' if row_name in ['ストローク','合計'] else '1px solid black'}; text-align:center; padding:6px 8px'>{row_name}</th>"
+    for p in players:
+        val = results.loc[row_name,p]
+        color = 'red' if val < 0 else 'black'
+        bord
 
 
 
