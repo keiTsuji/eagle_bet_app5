@@ -54,19 +54,8 @@ for cat, value in awards:
 st.subheader("⛳ ストローク（単価100）")
 scores = [int(st.number_input(f"{p} のスコア", min_value=0, value=75)) for p in players]
 for i, p in enumerate(players):
-    diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) if j != i)
-    results.loc["ストローク", p] = -diff_sum * 100
+    diff_sum = sum(scores[i] - scores[j] for j in range(len(players)) i_
 
-# 合計
-results.loc["合計"] = results.sum()
-
-st.markdown("---")
-st.subheader("💰 計算結果")
-
-# -------------------------------------------
-# 安全にHTMLテーブル作成
-# -------------------------------------------
-html_table = "<table style='width:100%; border-collapse:collapse; text-align:center; backgro_
 
 
 
