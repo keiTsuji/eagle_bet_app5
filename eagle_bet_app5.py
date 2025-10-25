@@ -22,10 +22,7 @@ table.dataframe td {
     padding: 6px 8px;
 }
 
-/* 合計行だけ別の背景色（淡いゴールド） */
-table.dataframe tr:last-child td {
-    background-color: #fff3b0;  /* ← 合計行のバックカラー */
-}
+
 
 /* ヘッダーの見た目はそのまま */
 table.dataframe th {
@@ -106,6 +103,7 @@ html_table = html_table.replace(
 )
 
 st.markdown(html_table, unsafe_allow_html=True)
+
 
 
 
