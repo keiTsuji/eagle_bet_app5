@@ -85,7 +85,7 @@ st.divider()
 st.subheader("💰 計算結果")
 
 # -------------------------------------------
-# HTML化 + マイナスは赤字に変換
+# HTML化 + マイナス赤字
 # -------------------------------------------
 html_table = results.to_html(classes='dataframe', border=1, justify='center')
 
@@ -94,7 +94,6 @@ for p in players:
     for c in results.index:
         val = results.loc[c, p]
         if val < 0:
-            # 負の値だけ赤字に変更
             html_table = html_table.replace(
                 f">{val}<",
                 f"><span style='color:red;'>{val}</span><"
@@ -105,10 +104,18 @@ html_table = html_table.replace(
     '<table border="1" class="dataframe">',
     '<table border="1" class="dataframe" style="text-align:center; background-color:#fff8dc; border-radius:10px;">'
 )
+html_table = html_table.replace('<th>', '<th style="font-size:16px; background-color:#f5deb3;">')
+
+# -------------------------------------------
+# ストローク行と合計行の下に二重線を追加
+# -------------------------------------------
+for row_name in ["ストローク", "合計"]:
+    html_table = html_table.replace(
+        f"<tr><th>{row_name}</th>",
+        f"<tr style='border-bottom: 3px double black;'><th>{row_name}</th>"
+    )
 
 st.markdown(html_table, unsafe_allow_html=True)
-
-
 
 
 
